@@ -26,7 +26,7 @@ public class page_temps extends Application {
         Button fileButton = new Button("Fichier");
         fileButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
 
-        Button homeButton = new Button("accueil");
+        Button homeButton = new Button("utilisateur");
         homeButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
 
         Button projectButton = new Button("projet");

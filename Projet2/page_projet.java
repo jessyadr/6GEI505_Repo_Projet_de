@@ -2,10 +2,6 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -30,8 +26,8 @@ public class page_projet extends Application {
         Button fileButton = new Button("Fichier");
         fileButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
 
-        Button homeButton = new Button("accueil");
-        homeButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+        Button userButton = new Button("utilisateur");
+        userButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
 
         Button projectButton = new Button("projet"); // Garder la couleur par défaut (pas de style ajouté)
 
@@ -56,78 +52,83 @@ public class page_projet extends Application {
         HBox.setHgrow(spacerLeft, Priority.ALWAYS);
         HBox.setHgrow(spacerRight, Priority.ALWAYS);
 
-        Label userProfile = new Label("Alpha Tremblay (15690)");
+        Label userProfile = new Label("Nom utilisateur");
+        userProfile.setStyle("-fx-border-color: purple; -fx-padding: 5;");
 
         // Ajouter les composants au menuBar
-        menuBar.getChildren().addAll(fileButton, homeButton, projectButton, taskButton, timesheetButton, resourcesButton, helpButton, spacerLeft, appTitle, spacerRight, userProfile);
+        menuBar.getChildren().addAll(fileButton, userButton, projectButton, taskButton, timesheetButton, resourcesButton, helpButton, spacerLeft, appTitle, spacerRight, userProfile);
 
-        // Menu Latéral pour Liste des Projets
-        VBox sideMenu = new VBox(10);
-        sideMenu.setPadding(new Insets(10));
-        sideMenu.setStyle("-fx-background-color: #455a64; -fx-text-fill: white;");
+        // Titre pour la liste des projets
+        HBox projectTitleBox = new HBox(10);
+        projectTitleBox.setStyle("-fx-background-color: #6A0DAD; -fx-padding: 12;-fx-pref-width: 800px;");
+        projectTitleBox.setAlignment(Pos.CENTER_LEFT);
 
-        Label listTitle = new Label("Liste des projets");
-        listTitle.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+        ImageView menuIcon = new ImageView(new Image("file:images/menu.png")); // Icône de menu (remplacez par le bon chemin)
+        menuIcon.setFitHeight(20);
+        menuIcon.setFitWidth(20);
 
-        Button project1 = new Button("Projet 1");
-        Button subProject1 = new Button("sous projet 1");
-        subProject1.setStyle("-fx-background-color: #cfd8dc;");
-        Button subProject2 = new Button("sous projet 2");
-        subProject2.setStyle("-fx-background-color: #cfd8dc;");
-        Button subProject3 = new Button("sous projet 3");
-        subProject3.setStyle("-fx-background-color: #cfd8dc;");
-        Button project2 = new Button("Projet 2");
-        Button project3 = new Button("Projet 3");
-        Button project4 = new Button("Projet 4");
+        Label projectTitleLabel = new Label("LISTE DES PROJETS");
+        projectTitleLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;-fx-pref-width: 800px;");
 
-        sideMenu.getChildren().addAll(listTitle, project1, subProject1, subProject2, subProject3, project2, project3, project4);
+        projectTitleBox.getChildren().addAll(menuIcon, projectTitleLabel);
 
-        // Zone Centrale (Diagramme de type Gantt simplifié)
-        VBox ganttChart = new VBox(10);
-        ganttChart.setPadding(new Insets(10));
-
-        Label searchLabel = new Label("Rechercher");
-        TextField searchField = new TextField();
-        HBox searchBox = new HBox(5, searchLabel, searchField);
+        // Barre de recherche à l'extrême droite
+        HBox searchBox = new HBox(10);
         searchBox.setAlignment(Pos.CENTER_RIGHT);
+        searchBox.setPadding(new Insets(10));
 
-        // Image représentant le diagramme de Gantt
-        ImageView ganttImage = new ImageView(new Image("file:images\\diagramme.png")); // Remplacez par le chemin correct
-        ganttImage.setFitHeight(400);  // Ajuster la hauteur de l'image
-        ganttImage.setFitWidth(600);   // Ajuster la largeur de l'image
-        ganttImage.setPreserveRatio(true);
+        ImageView searchIcon = new ImageView(new Image("file:images/recherche.jpg")); // Icône de recherche (remplacez par le bon chemin)
+        searchIcon.setFitHeight(20);
+        searchIcon.setFitWidth(20);
 
-        ganttChart.getChildren().addAll(searchBox, ganttImage);
+        TextField searchField = new TextField();
+        searchField.setPromptText("Rechercher");
+        searchField.setStyle("-fx-border-color: lightgray;");
 
-        // Graphique (Chart) sur le côté droit
-        CategoryAxis xAxis = new CategoryAxis();
-        xAxis.setLabel("Projets");
+        searchBox.getChildren().addAll(searchIcon, searchField);
+        HBox.setHgrow(searchBox, Priority.ALWAYS); // Permet à la barre de recherche de s'étendre à l'extrême droite
 
-        NumberAxis yAxis = new NumberAxis();
-        yAxis.setLabel("Progression (%)");
+        // Conteneur pour le titre des projets et la barre de recherche
+        BorderPane titleAndSearchPane = new BorderPane();
+        titleAndSearchPane.setPadding(new Insets(10));
+        titleAndSearchPane.setLeft(projectTitleBox);
+        titleAndSearchPane.setRight(searchBox);
 
-        BarChart<String, Number> barChart = new BarChart<>(xAxis, yAxis);
-        barChart.setTitle("Progression des Projets");
-        barChart.setLegendVisible(false);
-        barChart.setPrefWidth(300);  // Réduire la largeur du graphique pour le rendre plus petit
+        // Liste des projets
+        VBox projectsBox = new VBox(10);
+        projectsBox.setPadding(new Insets(20));
+        projectsBox.setAlignment(Pos.CENTER);
 
-        XYChart.Series<String, Number> dataSeries = new XYChart.Series<>();
-        XYChart.Data<String, Number> data1 = new XYChart.Data<>("Projet 1", 30);
-        XYChart.Data<String, Number> data2 = new XYChart.Data<>("Projet 2", 50);
-        XYChart.Data<String, Number> data3 = new XYChart.Data<>("Projet 3", 70);
+        Button project1Button = new Button("Projet 1");
+        project1Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 800px;");
 
-        // Appliquer la couleur violette aux barres
-        data1.nodeProperty().addListener((obs, oldNode, newNode) -> newNode.setStyle("-fx-bar-fill: #6A0DAD;"));
-        data2.nodeProperty().addListener((obs, oldNode, newNode) -> newNode.setStyle("-fx-bar-fill: #6A0DAD;"));
-        data3.nodeProperty().addListener((obs, oldNode, newNode) -> newNode.setStyle("-fx-bar-fill: #6A0DAD;"));
+        Button project2Button = new Button("Projet 2");
+        project2Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 800px;");
 
-        dataSeries.getData().addAll(data1, data2, data3);
-        barChart.getData().add(dataSeries);
+        Button project3Button = new Button("Projet 3");
+        project3Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 800px;");
+
+        Button project4Button = new Button("Projet 4");
+        project4Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 800px;");
+
+        // Ajouter les projets à la liste
+        projectsBox.getChildren().addAll(project1Button, project2Button, project3Button, project4Button);
+
+        // Barre de progression en bas
+        HBox progressBarBox = new HBox(10);
+        progressBarBox.setPadding(new Insets(10));
+        progressBarBox.setAlignment(Pos.BOTTOM_LEFT);
+
+        Label progressLabel = new Label(" ");
+        Region progressBar = new Region();
+        progressBar.setStyle("-fx-background-color: #6A0DAD; -fx-pref-width: 300px; -fx-pref-height: 10px;");
+
+        progressBarBox.getChildren().addAll(progressLabel, progressBar);
 
         // Ajouter le Logo DigiCraft en bas à droite
         ImageView logo = new ImageView(new Image("file:images/logo.png")); // Assurez-vous que l'image est disponible
-        logo.setFitHeight(20);  // Redimensionner le logo pour qu'il soit plus petit
-        logo.setFitWidth(15);
+        logo.setFitHeight(40);  // Redimensionner le logo pour qu'il soit plus petit
+        logo.setFitWidth(40);
         StackPane.setAlignment(logo, Pos.BOTTOM_RIGHT);
         StackPane.setMargin(logo, new Insets(10));
 
@@ -144,19 +145,22 @@ public class page_projet extends Application {
             }
         });
 
-        // Ajouter le bouton "page_accueil" en bas à gauche
+        // Ajouter les composants au conteneur principal
+        VBox mainBox = new VBox(10);
+        mainBox.setPadding(new Insets(10));
+        mainBox.getChildren().addAll(titleAndSearchPane, projectsBox, progressBarBox);
+
+        // Assembler tout dans un BorderPane
         BorderPane root = new BorderPane();
         root.setTop(menuBar);
-        root.setLeft(new ScrollPane(sideMenu));
-        root.setCenter(ganttChart);
-        root.setRight(barChart);
+        root.setCenter(new ScrollPane(mainBox));
         root.setBottom(new HBox(pageAccueilButton)); // Bouton ajouté en bas à gauche
         BorderPane.setAlignment(pageAccueilButton, Pos.BOTTOM_LEFT);
         BorderPane.setMargin(pageAccueilButton, new Insets(10));
 
-        // Assembler tout dans un StackPane
+        // Ajouter le logo et le reste dans un StackPane
         StackPane stackPane = new StackPane(root, logo);
-        Scene scene = new Scene(stackPane, 1000, 600);
+        Scene scene = new Scene(stackPane, 1200, 700); // Augmenter la taille de la fenêtre pour plus d'espace
         primaryStage.setScene(scene);
         primaryStage.show();
     }

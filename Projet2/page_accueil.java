@@ -13,11 +13,18 @@ import javafx.stage.Stage;
 
 public class page_accueil extends Application {
 
+    private String username;
+
+    // Constructeur personnalisé pour recevoir le nom d'utilisateur
+    public page_accueil(String username) {
+        this.username = username;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("GestionAPP");
 
-        // Barre de titre en haut avec barre de progression sur la même ligne (progression à gauche, titre à droite)
+        // Barre de titre en haut avec barre de progression sur la même ligne (progression à gauche, titre au centre, utilisateur à droite)
         HBox titleBar = new HBox(20);
         titleBar.setPadding(new Insets(10));
         titleBar.setAlignment(Pos.CENTER_LEFT);
@@ -30,14 +37,21 @@ public class page_accueil extends Application {
         progress.setStyle("-fx-background-color: #6A0DAD; -fx-pref-width: 150px; -fx-pref-height: 10px;");
         progressBar.getChildren().add(progress);
 
-        Region spacer = new Region(); // Espacement flexible entre la barre de progression et le titre
-        HBox.setHgrow(spacer, Priority.ALWAYS);
+        // Espacement flexible entre les éléments du titre
+        Region spacerLeft = new Region();
+        Region spacerRight = new Region();
+        HBox.setHgrow(spacerLeft, Priority.ALWAYS);
+        HBox.setHgrow(spacerRight, Priority.ALWAYS);
 
         // Titre de l'application
         Label appTitle = new Label("GestionAPP");
         appTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: purple;");
 
-        titleBar.getChildren().addAll(progressBar, spacer, appTitle);
+        // Bouton de nom d'utilisateur (placé à l'extrême droite)
+        Button userButton = new Button(username);
+        userButton.setStyle("-fx-border-color: purple; -fx-padding: 5; -fx-text-fill: #6A0DAD;");
+
+        titleBar.getChildren().addAll(progressBar, spacerLeft, appTitle, spacerRight, userButton);
 
         // Barre latérale de gauche
         VBox sideBar = new VBox(20);
@@ -49,13 +63,16 @@ public class page_accueil extends Application {
         Button homeButton = new Button("Accueil");
         homeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
 
+        Button newUserButton = new Button("Nouvel utilisateur");
+        newUserButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
+
         Button newProjectButton = new Button("Nouveau projet");
         newProjectButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
 
         Button openButton = new Button("Ouvrir");
         openButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
 
-        sideBar.getChildren().addAll(homeButton, newProjectButton, openButton);
+        sideBar.getChildren().addAll(homeButton, newUserButton, newProjectButton, openButton);
 
         // Lignes séparatrices et autres options
         sideBar.getChildren().add(new Label("______________________"));
@@ -72,9 +89,9 @@ public class page_accueil extends Application {
         // Zone de recherche
         HBox searchBox = new HBox(10);
         searchBox.setPadding(new Insets(10));
-        searchBox.setAlignment(Pos.CENTER_LEFT);
+        searchBox.setAlignment(Pos.TOP_RIGHT);
 
-        ImageView searchIcon = new ImageView(new Image("file:images\\recherche.jpg")); // Icône de recherche
+        ImageView searchIcon = new ImageView(new Image("file:images/recherche.jpg")); // Icône de recherche
         searchIcon.setFitHeight(20);
         searchIcon.setFitWidth(20);
 
@@ -102,10 +119,10 @@ public class page_accueil extends Application {
         Label templateLabel = new Label("Template projet");
         templateLabel.setStyle("-fx-border-color: lightgrey; -fx-padding: 5;");
 
-        centralBox.getChildren().addAll(searchBox, optionsCentralBox, templateLabel);
+        centralBox.getChildren().addAll(optionsCentralBox, templateLabel);
 
         // Logo DigiCraft en bas à droite
-        ImageView logo = new ImageView(new Image("file:images\\logo.png")); // Assurez-vous que l'image est disponible
+        ImageView logo = new ImageView(new Image("file:images/logo.png")); // Assurez-vous que l'image est disponible
         logo.setFitHeight(60);
         logo.setFitWidth(60);
 
@@ -130,6 +147,7 @@ public class page_accueil extends Application {
         root.setTop(titleBar);
         root.setLeft(sideBar);
         root.setCenter(centralBox);
+        root.setRight(searchBox);
 
         StackPane stackPane = new StackPane(root, logo, bottomLeftBox);
         StackPane.setAlignment(logo, Pos.BOTTOM_RIGHT);

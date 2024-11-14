@@ -65,7 +65,13 @@ public class page_connexion extends Application {
         Button loginButton = new Button("Connexion");
         loginButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white; -fx-font-size: 14px;");
         loginButton.setOnAction(e -> {
-            System.out.println("Connexion en cours...");
+            String username = userTextField.getText();
+            page_accueil accueilPage = new page_accueil(username);
+            try {
+                accueilPage.start(primaryStage); // Appel de la méthode start pour remplacer la scène
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         // Autre texte
@@ -89,41 +95,11 @@ public class page_connexion extends Application {
 
         socialMediaBox.getChildren().addAll(appleIcon, googleIcon, facebookIcon);
 
-        // Ajouter le Logo DigiCraft en bas à droite
-        ImageView logo = new ImageView(new Image("file:images\\logo.png")); // Assurez-vous que l'image est disponible
-        logo.setFitHeight(50);  // Redimensionner le logo pour qu'il soit plus petit
-        logo.setFitWidth(50);
-
-        // Bouton "page_projet" pour naviguer vers la page de projet
-        Button pageProjetButton = new Button("page_projet");
-        pageProjetButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white; -fx-font-size: 14px;");
-        pageProjetButton.setOnAction(e -> {
-            // Créer une nouvelle instance de page_projet et afficher l'interface
-            page_projet projectPage = new page_projet();
-            try {
-                projectPage.start(primaryStage); // Appel de la méthode start pour remplacer la scène
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-
         // Assemblage du conteneur principal
         mainContainer.getChildren().addAll(profileImage, headerLabel, gridPane, optionsBox, loginButton, otherLabel, socialMediaBox);
 
-        // Utiliser un BorderPane pour positionner les éléments en bas à gauche et en bas à droite
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(mainContainer);
-        borderPane.setBottom(new HBox(pageProjetButton)); // Ajouter le bouton "page_projet" en bas à gauche
-        BorderPane.setAlignment(pageProjetButton, Pos.BOTTOM_LEFT);
-        BorderPane.setMargin(pageProjetButton, new Insets(10));
-
-        // Ajouter le logo en bas à droite
-        StackPane stackPane = new StackPane(borderPane, logo);
-        StackPane.setAlignment(logo, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(logo, new Insets(10));
-
         // Créer la scène et l'afficher
-        Scene scene = new Scene(stackPane, 1000, 600);
+        Scene scene = new Scene(mainContainer, 1000, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

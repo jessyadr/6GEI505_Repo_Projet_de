@@ -10,7 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-public class page_tache extends Application {
+public class page_utilisateur extends Application {
 
     @Override
     public void start(Stage primaryStage) {
@@ -25,13 +25,13 @@ public class page_tache extends Application {
         Button fileButton = new Button("Fichier");
         fileButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
 
-        Button userButton = new Button("utilisateur");
-        userButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
-
+        Button userButton = new Button("utilisateur"); // Bouton actif, pas de style ajouté
+        
         Button projectButton = new Button("projet");
         projectButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
 
-        Button taskButton = new Button("tache"); // Garder le bouton actif sans style supplémentaire
+        Button taskButton = new Button("tache");
+        taskButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
 
         Button timesheetButton = new Button("Feuille de temps");
         timesheetButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
@@ -55,39 +55,42 @@ public class page_tache extends Application {
 
         menuBar.getChildren().addAll(fileButton, userButton, projectButton, taskButton, timesheetButton, resourcesButton, helpButton, spacerLeft, appTitle, spacerRight, userProfile);
 
-        // Titre "Liste des tâches"
-        HBox taskTitleBox = new HBox(10);
-        taskTitleBox.setStyle("-fx-background-color: #6A0DAD; -fx-padding: 12;");
-        taskTitleBox.setAlignment(Pos.CENTER_LEFT);
+        // Titre "Liste des utilisateurs"
+        HBox userTitleBox = new HBox(10);
+        userTitleBox.setStyle("-fx-background-color: #6A0DAD; -fx-padding: 12;");
+        userTitleBox.setAlignment(Pos.CENTER_LEFT);
 
         ImageView menuIcon = new ImageView(new Image("file:images/menu.png")); // Icône de menu (remplacez par le bon chemin)
         menuIcon.setFitHeight(20);
         menuIcon.setFitWidth(20);
 
-        Label taskTitleLabel = new Label("Liste des tâches");
-        taskTitleLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;-fx-pref-width: 600px");
+        Label userTitleLabel = new Label("Liste des utilisateurs");
+        userTitleLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;-fx-pref-width: 600px");
 
-        taskTitleBox.getChildren().addAll(menuIcon, taskTitleLabel);
+        userTitleBox.getChildren().addAll(menuIcon, userTitleLabel);
 
-        // Liste des tâches
-        VBox tasksBox = new VBox(10);
-        tasksBox.setPadding(new Insets(20));
-        tasksBox.setAlignment(Pos.TOP_LEFT);
+        // Liste des utilisateurs
+        VBox usersBox = new VBox(10);
+        usersBox.setPadding(new Insets(20));
+        usersBox.setAlignment(Pos.TOP_LEFT);
 
-        Button task1Button = new Button("tâche 1");
-        task1Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 600px;");
+        Button user1Button = new Button("Utilisateur 1");
+        user1Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 600px;");
 
-        Button task2Button = new Button("tâche 2");
-        task2Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 600px;");
+        Button user2Button = new Button("Utilisateur 2");
+        user2Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 600px;");
 
-        Button task3Button = new Button("tâche 3");
-        task3Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 600px;");
+        Button user3Button = new Button("Utilisateur 3");
+        user3Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 600px;");
 
-        Button task4Button = new Button("tâche 4");
-        task4Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 600px;");
+        Button user4Button = new Button("Utilisateur 4");
+        user4Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 600px;");
 
-        // Ajouter les tâches à la liste
-        tasksBox.getChildren().addAll(task1Button, task2Button, task3Button, task4Button);
+        Button user5Button = new Button("Utilisateur 5");
+        user5Button.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 600px;");
+
+        // Ajouter les utilisateurs à la liste
+        usersBox.getChildren().addAll(user1Button, user2Button, user3Button, user4Button, user5Button);
 
         // Barre de recherche à l'extrême droite
         HBox searchBox = new HBox(10);
@@ -109,7 +112,7 @@ public class page_tache extends Application {
         titleAndSearchBox.setAlignment(Pos.CENTER_LEFT);
         titleAndSearchBox.setPadding(new Insets(10, 10, 10, 20));
         HBox.setHgrow(searchBox, Priority.ALWAYS);
-        titleAndSearchBox.getChildren().addAll(taskTitleBox, searchBox);
+        titleAndSearchBox.getChildren().addAll(userTitleBox, searchBox);
 
         // Ajouter le Logo DigiCraft en bas à droite
         ImageView logo = new ImageView(new Image("file:images/logo.png")); // Assurez-vous que l'image est disponible
@@ -134,7 +137,7 @@ public class page_tache extends Application {
 
         // Conteneur principal
         VBox mainContent = new VBox(10);
-        mainContent.getChildren().addAll(titleAndSearchBox, tasksBox);
+        mainContent.getChildren().addAll(titleAndSearchBox, usersBox);
         mainContent.setPadding(new Insets(10));
 
         BorderPane root = new BorderPane();
