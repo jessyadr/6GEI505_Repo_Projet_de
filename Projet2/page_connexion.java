@@ -2,20 +2,15 @@ import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class page_connexion extends Application {
     @Override
@@ -61,16 +56,25 @@ public class page_connexion extends Application {
         HBox optionsBox = new HBox(10, rememberMeCheckBox, forgotPasswordLink);
         optionsBox.setAlignment(Pos.CENTER);
 
+        // Label pour afficher les erreurs de connexion
+        Label errorLabel = new Label();
+        errorLabel.setStyle("-fx-text-fill: red;");
+
         // Bouton de connexion
         Button loginButton = new Button("Connexion");
         loginButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white; -fx-font-size: 14px;");
         loginButton.setOnAction(e -> {
             String username = userTextField.getText();
-            page_accueil accueilPage = new page_accueil(username);
-            try {
-                accueilPage.start(primaryStage); // Appel de la méthode start pour remplacer la scène
-            } catch (Exception ex) {
-                ex.printStackTrace();
+            String password = passwordField.getText();
+            if (authenticateUser(username, password)) {
+                page_accueil accueilPage = new page_accueil(username);
+                try {
+                    accueilPage.start(primaryStage); // Appel de la méthode start pour remplacer la scène
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            } else {
+                errorLabel.setText("Identifiant ou mot de passe incorrect");
             }
         });
 
@@ -96,12 +100,31 @@ public class page_connexion extends Application {
         socialMediaBox.getChildren().addAll(appleIcon, googleIcon, facebookIcon);
 
         // Assemblage du conteneur principal
-        mainContainer.getChildren().addAll(profileImage, headerLabel, gridPane, optionsBox, loginButton, otherLabel, socialMediaBox);
+        mainContainer.getChildren().addAll(profileImage, headerLabel, gridPane, optionsBox, loginButton, errorLabel, otherLabel, socialMediaBox);
 
         // Créer la scène et l'afficher
         Scene scene = new Scene(mainContainer, 1000, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    // Méthode pour vérifier les identifiants de l'utilisateur
+    private boolean authenticateUser(String username, String password) {
+        Connection conn = SQLiteConnection.connect();
+        if (conn == null) {
+            System.out.println("Erreur: Impossible d'etablir la connexion à la base de données.");
+            return false;
+        }
+        String sql = "SELECT * FROM Utilisateur_Utl WHERE Utl_id = ? AND Utl_mdp = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next(); // Retourne true si un utilisateur correspondant est trouvé
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
     }
 
     public static void main(String[] args) {
