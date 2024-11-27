@@ -4,33 +4,41 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SQLiteConnection {
+    private static final String URL = "jdbc:sqlite:C:\\Users\\lauri\\OneDrive\\Desktop\\UQAC\\2024_Fall\\Courses\\Methodes_de_gestion_de_projets_informatiques(6GEI505)\\6GEI505_Repo_Projet_de_Session\\base_de_donnees\\gestion_projets.db"; 
+
     public static Connection connect() {
-        String url = "jdbc:sqlite:C:\\Users\\lauri\\OneDrive\\Desktop\\UQAC\\2024_Fall\\Courses\\Methodes_de_gestion_de_projets_informatiques(6GEI505)\\6GEI505_Repo_Projet_de_Session\\base de données\\gestion_projets.db";
         Connection conn = null;
         try {
             Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection(url);
+            conn = DriverManager.getConnection(URL);
             System.out.println("Connexion à SQLite établie.");
         } catch (ClassNotFoundException e) {
             System.out.println("Erreur: Impossible de charger le driver JDBC SQLite.");
             e.printStackTrace();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("Erreur de connexion à la base de données : " + e.getMessage());
         }
         return conn;
     }
 
-    public static void connectAndAddUser(String username, String password) {
-        String sql = "INSERT INTO Utilisateur_Utl(Utl_id, Utl_mdp) VALUES(?, ?)";
+    public static boolean addUser(String identifiant, String motDePasse) {
+        String sql = "INSERT INTO Utilisateur_Utl (Utl_id, Utl_mdp) VALUES (?, ?)";
 
-        try (Connection conn = connect(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
+        try (Connection conn = connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, identifiant);
+            pstmt.setString(2, motDePasse);
             pstmt.executeUpdate();
-            System.out.println("Nouvel utilisateur ajouté : " + username);
+            return true;
+
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout de l'utilisateur.");
-            e.printStackTrace();
+            System.out.println("Erreur lors de l'ajout de l'utilisateur : " + e.getMessage());
+            return false;
         }
+    }
+
+    public static void main(String[] args) {
+        connect();
     }
 }
