@@ -5,26 +5,34 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class page_accueil extends Application {
 
-    private String username;
+    private String nomUtilisateur;
 
-    // Constructeur personnalisé pour recevoir le nom d'utilisateur
-    public page_accueil(String username) {
-        this.username = username;
+    // Constructeur par défaut requis pour JavaFX
+    public page_accueil() {
+        this.nomUtilisateur = "Utilisateur";  // Vous pouvez définir une valeur par défaut ici.
+    }
+
+    // Constructeur pour recevoir le nom de l'utilisateur connecté
+    public page_accueil(String nomUtilisateur) {
+        this.nomUtilisateur = nomUtilisateur;
     }
 
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("GestionAPP");
 
-        // Barre de titre en haut avec barre de progression sur la même ligne (progression à gauche, titre au centre, utilisateur à droite)
+        // Barre de titre en haut avec barre de progression sur la même ligne
         HBox titleBar = new HBox(20);
         titleBar.setPadding(new Insets(10));
         titleBar.setAlignment(Pos.CENTER_LEFT);
@@ -34,7 +42,8 @@ public class page_accueil extends Application {
         progressBar.setPadding(new Insets(10));
         progressBar.setStyle("-fx-background-color: #E0E0E0;");
         Region progress = new Region();
-        progress.setStyle("-fx-background-color: #6A0DAD; -fx-pref-width: 150px; -fx-pref-height: 10px;");
+        progress.setStyle("-fx-background-color: #6A0DAD;");
+        progress.setPrefSize(150, 10);
         progressBar.getChildren().add(progress);
 
         // Espacement flexible entre les éléments du titre
@@ -47,11 +56,24 @@ public class page_accueil extends Application {
         Label appTitle = new Label("GestionAPP");
         appTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: purple;");
 
-        // Bouton de nom d'utilisateur (placé à l'extrême droite)
-        Button userButton = new Button(username);
-        userButton.setStyle("-fx-border-color: purple; -fx-padding: 5; -fx-text-fill: #6A0DAD;");
+        // Bouton "Déconnexion" pour naviguer vers l'interface "page_connexion"
+        Button pageConnexionButton = new Button("Déconnexion");
+        pageConnexionButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+        pageConnexionButton.setOnAction(e -> {
+            page_connexion connexionPage = new page_connexion();
+            try {
+                connexionPage.start(primaryStage); // Appel de la méthode start pour remplacer la scène
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
-        titleBar.getChildren().addAll(progressBar, spacerLeft, appTitle, spacerRight, userButton);
+        // Affichage du nom de l'utilisateur connecté
+        Label userLabel = new Label(nomUtilisateur);
+        userLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #6A0DAD;");
+
+        // Ajouter les éléments à la barre de titre
+        titleBar.getChildren().addAll(progressBar, spacerLeft, appTitle, spacerRight, pageConnexionButton, userLabel);
 
         // Barre latérale de gauche
         VBox sideBar = new VBox(20);
@@ -65,12 +87,30 @@ public class page_accueil extends Application {
 
         Button newUserButton = new Button("Nouvel utilisateur");
         newUserButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
+        newUserButton.setOnAction(e -> {
+            System.out.println("Bouton \"nouvel utilisateur\" cliqué");
+            FormulaireNouvelUtilisateur formulaire = new FormulaireNouvelUtilisateur();
+            formulaire.start(new Stage()); // Ouvre une nouvelle fenêtre pour créer un utilisateur
+        });
 
         Button newProjectButton = new Button("Nouveau projet");
         newProjectButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
+        newProjectButton.setOnAction(e -> {
+            FormulaireNouveauProjet formulaireProjet = new FormulaireNouveauProjet();
+            formulaireProjet.start(new Stage());
+        });
 
-        Button openButton = new Button("Ouvrir");
-        openButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+        Button openButton = new Button("Ouvrir Projet");
+        openButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
+        openButton.setOnAction(e -> {
+            page_projet ProjetPage = new page_projet();
+            try {
+                ProjetPage.start(primaryStage); // Appel de la méthode start pour remplacer la scène
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+        });
 
         sideBar.getChildren().addAll(homeButton, newUserButton, newProjectButton, openButton);
 
@@ -85,20 +125,6 @@ public class page_accueil extends Application {
         VBox optionsBox = new VBox(10, saveLink, saveAsLink, printLink, shareLink, closeLink);
         optionsBox.setAlignment(Pos.TOP_LEFT);
         sideBar.getChildren().add(optionsBox);
-
-        // Zone de recherche
-        HBox searchBox = new HBox(10);
-        searchBox.setPadding(new Insets(10));
-        searchBox.setAlignment(Pos.TOP_RIGHT);
-
-        ImageView searchIcon = new ImageView(new Image("file:images/recherche.jpg")); // Icône de recherche
-        searchIcon.setFitHeight(20);
-        searchIcon.setFitWidth(20);
-
-        TextField searchField = new TextField();
-        searchField.setPromptText("Rechercher");
-
-        searchBox.getChildren().addAll(searchIcon, searchField);
 
         // Zone centrale (choix de récents, PC, parcourir)
         VBox centralBox = new VBox(20);
@@ -121,43 +147,14 @@ public class page_accueil extends Application {
 
         centralBox.getChildren().addAll(optionsCentralBox, templateLabel);
 
-        // Logo DigiCraft en bas à droite
-        ImageView logo = new ImageView(new Image("file:images/logo.png")); // Assurez-vous que l'image est disponible
-        logo.setFitHeight(60);
-        logo.setFitWidth(60);
-
-        // Bouton "Page Tâche" en bas à gauche
-        Button pageTacheButton = new Button("Page Tâche");
-        pageTacheButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
-        pageTacheButton.setOnAction(e -> {
-            page_tache tachePage = new page_tache();
-            try {
-                tachePage.start(primaryStage); // Appel de la méthode start pour remplacer la scène
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        VBox bottomLeftBox = new VBox(10, pageTacheButton);
-        bottomLeftBox.setPadding(new Insets(10));
-        bottomLeftBox.setAlignment(Pos.BOTTOM_LEFT);
-
         // Assemblage du tout
         BorderPane root = new BorderPane();
         root.setTop(titleBar);
         root.setLeft(sideBar);
         root.setCenter(centralBox);
-        root.setRight(searchBox);
-
-        StackPane stackPane = new StackPane(root, logo, bottomLeftBox);
-        StackPane.setAlignment(logo, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(logo, new Insets(10));
-
-        StackPane.setAlignment(bottomLeftBox, Pos.BOTTOM_LEFT);
-        StackPane.setMargin(bottomLeftBox, new Insets(10));
 
         // Créer la scène et l'afficher
-        Scene scene = new Scene(stackPane, 1000, 600);
+        Scene scene = new Scene(root, 1000, 600);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
