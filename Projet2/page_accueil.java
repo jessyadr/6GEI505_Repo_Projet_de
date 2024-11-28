@@ -56,11 +56,24 @@ public class page_accueil extends Application {
         Label appTitle = new Label("GestionAPP");
         appTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: purple;");
 
+        // Bouton "Déconnexion" pour naviguer vers l'interface "page_connexion"
+        Button pageConnexionButton = new Button("Déconnexion");
+        pageConnexionButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+        pageConnexionButton.setOnAction(e -> {
+            page_connexion connexionPage = new page_connexion();
+            try {
+                connexionPage.start(primaryStage); // Appel de la méthode start pour remplacer la scène
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
         // Affichage du nom de l'utilisateur connecté
         Label userLabel = new Label(nomUtilisateur);
         userLabel.setStyle("-fx-font-weight: bold; -fx-text-fill: #6A0DAD;");
 
-        titleBar.getChildren().addAll(progressBar, spacerLeft, appTitle, spacerRight, userLabel);
+        // Ajouter les éléments à la barre de titre
+        titleBar.getChildren().addAll(progressBar, spacerLeft, appTitle, spacerRight, pageConnexionButton, userLabel);
 
         // Barre latérale de gauche
         VBox sideBar = new VBox(20);
@@ -87,8 +100,17 @@ public class page_accueil extends Application {
             formulaireProjet.start(new Stage());
         });
 
-        Button openButton = new Button("Ouvrir");
+        Button openButton = new Button("Ouvrir Projet");
         openButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
+        openButton.setOnAction(e -> {
+            page_projet ProjetPage = new page_projet();
+            try {
+                ProjetPage.start(primaryStage); // Appel de la méthode start pour remplacer la scène
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+        });
 
         sideBar.getChildren().addAll(homeButton, newUserButton, newProjectButton, openButton);
 
