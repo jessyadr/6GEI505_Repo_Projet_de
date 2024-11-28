@@ -5,10 +5,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class page_accueil extends Application {
@@ -39,7 +42,8 @@ public class page_accueil extends Application {
         progressBar.setPadding(new Insets(10));
         progressBar.setStyle("-fx-background-color: #E0E0E0;");
         Region progress = new Region();
-        progress.setStyle("-fx-background-color: #6A0DAD; -fx-pref-width: 150px; -fx-pref-height: 10px;");
+        progress.setStyle("-fx-background-color: #6A0DAD;");
+        progress.setPrefSize(150, 10);
         progressBar.getChildren().add(progress);
 
         // Espacement flexible entre les éléments du titre
@@ -78,6 +82,10 @@ public class page_accueil extends Application {
 
         Button newProjectButton = new Button("Nouveau projet");
         newProjectButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
+        newProjectButton.setOnAction(e -> {
+            FormulaireNouveauProjet formulaireProjet = new FormulaireNouveauProjet();
+            formulaireProjet.start(new Stage());
+        });
 
         Button openButton = new Button("Ouvrir");
         openButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
