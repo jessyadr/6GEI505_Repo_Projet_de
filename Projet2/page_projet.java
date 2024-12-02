@@ -5,10 +5,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.sql.Connection;
@@ -18,11 +18,91 @@ import java.sql.Statement;
 
 public class page_projet extends Application {
 
+    private String nomUtilisateur;
+
+    public page_projet() {
+        this.nomUtilisateur = "Utilisateur"; // Valeur par défaut
+    }
+
+    public page_projet(String nomUtilisateur) {
+        this.nomUtilisateur = nomUtilisateur;
+    }
+
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("GestionAPP");
+        primaryStage.setTitle("GestionAPP - Projets");
 
-        // Barre de Menu en Haut
+        // Barre de menu
+        HBox menuBar = createMenuBar(primaryStage);
+
+        // Titre pour la liste des projets
+        HBox projectTitleBox = new HBox(10);
+        projectTitleBox.setStyle("-fx-background-color: #6A0DAD; -fx-padding: 12;");
+        projectTitleBox.setAlignment(Pos.CENTER_LEFT);
+
+        ImageView menuIcon = new ImageView(new Image("file:images/menu.png"));
+        menuIcon.setFitHeight(20);
+        menuIcon.setFitWidth(20);
+
+        Label projectTitleLabel = new Label("LISTE DES PROJETS");
+        projectTitleLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
+
+        projectTitleBox.getChildren().addAll(menuIcon, projectTitleLabel);
+
+        // Liste des projets depuis la base de données
+        VBox projectsBox = new VBox(10);
+        projectsBox.setPadding(new Insets(20));
+        projectsBox.setAlignment(Pos.CENTER);
+
+        try (Connection conn = SQLiteConnection.connect();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT Pro_nom, Pro_description FROM Projet_Pro")) {
+
+            while (rs.next()) {
+                String projectName = rs.getString("Pro_nom");
+                String projectDescription = rs.getString("Pro_description");
+
+                VBox projectBox = new VBox(5);
+                projectBox.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-padding: 10; -fx-pref-width: 800px;");
+
+                Label projectNameLabel = new Label(projectName);
+                projectNameLabel.setStyle("-fx-font-weight: bold;");
+
+                Text projectDescriptionText = new Text(projectDescription);
+                projectDescriptionText.setWrappingWidth(780);
+
+                Button viewTasksButton = new Button("Voir les tâches");
+                viewTasksButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+                viewTasksButton.setOnAction(e -> {
+                    page_tache tachePage = new page_tache(projectName, nomUtilisateur);
+                    try {
+                        tachePage.start(primaryStage);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+
+                projectBox.getChildren().addAll(projectNameLabel, projectDescriptionText, viewTasksButton);
+                projectsBox.getChildren().add(projectBox);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des projets : " + e.getMessage());
+        }
+
+        VBox mainBox = new VBox(10, projectTitleBox, projectsBox);
+        mainBox.setPadding(new Insets(10));
+
+        BorderPane root = new BorderPane();
+        root.setTop(menuBar);
+        root.setCenter(new ScrollPane(mainBox));
+
+        Scene scene = new Scene(root, 1200, 700);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    private HBox createMenuBar(Stage primaryStage) {
         HBox menuBar = new HBox(10);
         menuBar.setPadding(new Insets(10));
         menuBar.setStyle("-fx-background-color: #b0bec5;");
@@ -31,7 +111,7 @@ public class page_projet extends Application {
         Button homeButton = new Button("Accueil");
         homeButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
         homeButton.setOnAction(e -> {
-            page_accueil accueilPage = new page_accueil();
+            page_accueil accueilPage = new page_accueil(nomUtilisateur);
             try {
                 accueilPage.start(primaryStage);
             } catch (Exception ex) {
@@ -39,10 +119,10 @@ public class page_projet extends Application {
             }
         });
 
-        Button userButton = new Button("utilisateur");
+        Button userButton = new Button("Utilisateur");
         userButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
         userButton.setOnAction(e -> {
-            page_utilisateur utilisateurPage = new page_utilisateur();
+            page_utilisateur utilisateurPage = new page_utilisateur(nomUtilisateur);
             try {
                 utilisateurPage.start(primaryStage);
             } catch (Exception ex) {
@@ -50,12 +130,13 @@ public class page_projet extends Application {
             }
         });
 
-        Button projectButton = new Button("projet");
+        Button projectButton = new Button("Projet");
+      
 
-        Button taskButton = new Button("tache");
+        Button taskButton = new Button("Tâche");
         taskButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
         taskButton.setOnAction(e -> {
-            page_tache tachePage = new page_tache();
+            page_tache tachePage = new page_tache("Projet", nomUtilisateur);
             try {
                 tachePage.start(primaryStage);
             } catch (Exception ex) {
@@ -63,10 +144,10 @@ public class page_projet extends Application {
             }
         });
 
-        Button timesheetButton = new Button("Feuille de temps");
+        Button timesheetButton = new Button("Feuille de Temps");
         timesheetButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
         timesheetButton.setOnAction(e -> {
-            page_temps tempsPage = new page_temps();
+            page_temps tempsPage = new page_temps(nomUtilisateur);
             try {
                 tempsPage.start(primaryStage);
             } catch (Exception ex) {
@@ -74,11 +155,8 @@ public class page_projet extends Application {
             }
         });
 
-        Button resourcesButton = new Button("Ressources");
-        resourcesButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
-
-        Button helpButton = new Button("Aide");
-        helpButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+        Button ganttButton = new Button("Gantt");
+        ganttButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
 
         Label appTitle = new Label("GestionAPP");
         appTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: purple;");
@@ -88,100 +166,11 @@ public class page_projet extends Application {
         HBox.setHgrow(spacerLeft, Priority.ALWAYS);
         HBox.setHgrow(spacerRight, Priority.ALWAYS);
 
-        Label userProfile = new Label("Nom utilisateur");
+        Label userProfile = new Label(nomUtilisateur);
         userProfile.setStyle("-fx-border-color: purple; -fx-padding: 5;");
 
-        menuBar.getChildren().addAll(homeButton, userButton, projectButton, taskButton, timesheetButton, resourcesButton, helpButton, spacerLeft, appTitle, spacerRight, userProfile);
-
-        // Titre pour la liste des projets
-        HBox projectTitleBox = new HBox(10);
-        projectTitleBox.setStyle("-fx-background-color: #6A0DAD; -fx-padding: 12;-fx-pref-width: 800px;");
-        projectTitleBox.setAlignment(Pos.CENTER_LEFT);
-
-        ImageView menuIcon = new ImageView(new Image("file:images/menu.png"));
-        menuIcon.setFitHeight(20);
-        menuIcon.setFitWidth(20);
-
-        Label projectTitleLabel = new Label("LISTE DES PROJETS");
-        projectTitleLabel.setStyle("-fx-text-fill: white; -fx-font-weight: bold;-fx-pref-width: 800px;");
-
-        projectTitleBox.getChildren().addAll(menuIcon, projectTitleLabel);
-
-        // Barre de recherche à l'extrême droite
-        HBox searchBox = new HBox(10);
-        searchBox.setAlignment(Pos.CENTER_RIGHT);
-        searchBox.setPadding(new Insets(10));
-
-        ImageView searchIcon = new ImageView(new Image("file:images/recherche.jpg"));
-        searchIcon.setFitHeight(20);
-        searchIcon.setFitWidth(20);
-
-        TextField searchField = new TextField();
-        searchField.setPromptText("Rechercher");
-        searchField.setStyle("-fx-border-color: lightgray;");
-
-        searchBox.getChildren().addAll(searchIcon, searchField);
-        HBox.setHgrow(searchBox, Priority.ALWAYS);
-
-        // Conteneur pour le titre des projets et la barre de recherche
-        BorderPane titleAndSearchPane = new BorderPane();
-        titleAndSearchPane.setPadding(new Insets(10));
-        titleAndSearchPane.setLeft(projectTitleBox);
-        titleAndSearchPane.setRight(searchBox);
-
-        // Liste des projets
-        VBox projectsBox = new VBox(10);
-        projectsBox.setPadding(new Insets(20));
-        projectsBox.setAlignment(Pos.CENTER);
-
-        // Charger les projets depuis la base de données
-        try (Connection conn = SQLiteConnection.connect();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT Pro_nom FROM Projet_Pro")) {
-
-            while (rs.next()) {
-                String projectName = rs.getString("Pro_nom");
-                Button projectButtonDynamic = new Button(projectName);
-                projectButtonDynamic.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: gray; -fx-pref-width: 800px;");
-                projectsBox.getChildren().add(projectButtonDynamic);
-            }
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des projets : " + e.getMessage());
-        }
-
-        // Barre de progression en bas
-        HBox progressBarBox = new HBox(10);
-        progressBarBox.setPadding(new Insets(10));
-        progressBarBox.setAlignment(Pos.BOTTOM_LEFT);
-
-        Label progressLabel = new Label(" ");
-        Region progressBar = new Region();
-        progressBar.setStyle("-fx-background-color: #6A0DAD; -fx-pref-width: 300px; -fx-pref-height: 10px;");
-
-        progressBarBox.getChildren().addAll(progressLabel, progressBar);
-
-        // Ajouter le Logo DigiCraft en bas à droite
-        ImageView logo = new ImageView(new Image("file:images/logo.png"));
-        logo.setFitHeight(40);
-        logo.setFitWidth(40);
-        StackPane.setAlignment(logo, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(logo, new Insets(10));
-
-        // Ajouter les composants au conteneur principal
-        VBox mainBox = new VBox(10);
-        mainBox.setPadding(new Insets(10));
-        mainBox.getChildren().addAll(titleAndSearchPane, projectsBox, progressBarBox);
-
-        // Assembler tout dans un BorderPane
-        BorderPane root = new BorderPane();
-        root.setTop(menuBar);
-        root.setCenter(new ScrollPane(mainBox));
-
-        // Ajouter le logo et le reste dans un StackPane
-        StackPane stackPane = new StackPane(root, logo);
-        Scene scene = new Scene(stackPane, 1200, 700);
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        menuBar.getChildren().addAll(homeButton, userButton, projectButton, taskButton, timesheetButton, ganttButton, spacerLeft, appTitle, spacerRight, userProfile);
+        return menuBar;
     }
 
     public static void main(String[] args) {

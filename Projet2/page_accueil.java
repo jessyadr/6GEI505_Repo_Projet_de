@@ -7,11 +7,7 @@ import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class page_accueil extends Application {
@@ -82,9 +78,6 @@ public class page_accueil extends Application {
         sideBar.setAlignment(Pos.TOP_LEFT);
 
         // Boutons du menu latéral
-        Button homeButton = new Button("Accueil");
-        homeButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
-
         Button newUserButton = new Button("Nouvel utilisateur");
         newUserButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
         newUserButton.setOnAction(e -> {
@@ -103,16 +96,15 @@ public class page_accueil extends Application {
         Button openButton = new Button("Ouvrir Projet");
         openButton.setStyle("-fx-background-color: #FFFFFF; -fx-border-color: purple; -fx-text-fill: #6A0DAD;");
         openButton.setOnAction(e -> {
-            page_projet ProjetPage = new page_projet();
+            page_projet ProjetPage = new page_projet(nomUtilisateur);
             try {
                 ProjetPage.start(primaryStage); // Appel de la méthode start pour remplacer la scène
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
         });
 
-        sideBar.getChildren().addAll(homeButton, newUserButton, newProjectButton, openButton);
+        sideBar.getChildren().addAll(newUserButton, newProjectButton, openButton);
 
         // Lignes séparatrices et autres options
         sideBar.getChildren().add(new Label("______________________"));
@@ -126,32 +118,28 @@ public class page_accueil extends Application {
         optionsBox.setAlignment(Pos.TOP_LEFT);
         sideBar.getChildren().add(optionsBox);
 
-        // Zone centrale (choix de récents, PC, parcourir)
-        VBox centralBox = new VBox(20);
-        centralBox.setPadding(new Insets(20));
+        // Zone centrale (message de bienvenue)
+        VBox welcomeBox = new VBox(20);
+        welcomeBox.setAlignment(Pos.CENTER);
 
-        Button recentButton = new Button("Récents");
-        recentButton.setStyle("-fx-background-color: #CFD8DC;");
+        Label welcomeLabel1 = new Label("BIENVENUE");
+        Label welcomeLabel2 = new Label("SUR");
+        Label welcomeLabel3 = new Label("GESTIONAPP");
 
-        Button pcButton = new Button("Ce PC");
-        pcButton.setStyle("-fx-background-color: #CFD8DC;");
+        welcomeLabel1.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #6A0DAD;");
+        welcomeLabel2.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #6A0DAD;");
+        welcomeLabel3.setStyle("-fx-font-size: 40px; -fx-font-weight: bold; -fx-text-fill: #6A0DAD;");
 
-        Button browseButton = new Button("Parcourir");
-        browseButton.setStyle("-fx-background-color: #CFD8DC;");
+        welcomeBox.getChildren().addAll(welcomeLabel1, welcomeLabel2, welcomeLabel3);
 
-        VBox optionsCentralBox = new VBox(15, recentButton, pcButton, browseButton);
-        optionsCentralBox.setAlignment(Pos.TOP_LEFT);
-
-        Label templateLabel = new Label("Template projet");
-        templateLabel.setStyle("-fx-border-color: lightgrey; -fx-padding: 5;");
-
-        centralBox.getChildren().addAll(optionsCentralBox, templateLabel);
+        StackPane centralPane = new StackPane(welcomeBox);
+        centralPane.setAlignment(Pos.CENTER);
 
         // Assemblage du tout
         BorderPane root = new BorderPane();
         root.setTop(titleBar);
         root.setLeft(sideBar);
-        root.setCenter(centralBox);
+        root.setCenter(centralPane);
 
         // Créer la scène et l'afficher
         Scene scene = new Scene(root, 1000, 600);

@@ -1,3 +1,5 @@
+import javafx.scene.layout.Region;
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -13,6 +15,16 @@ import javafx.stage.Stage;
 
 public class page_temps extends Application {
 
+     private String nomUtilisateur;
+
+    public page_temps() {
+        this.nomUtilisateur = "Utilisateur";
+    }
+
+    public page_temps(String nomUtilisateur) {
+        this.nomUtilisateur = nomUtilisateur;
+    }
+    
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("GestionAPP");
