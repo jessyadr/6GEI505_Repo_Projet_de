@@ -1,0 +1,18 @@
+# Ignorer tout par défaut
+*
+
+# Inclure les fichiers spécifiques nécessaires
+!*.java
+!*.sql
+!*.db
+!*.png
+!*.jpg
+!*.jpeg
+!.gitignore
+
+# Ignorer les fichiers temporaires et systèmes
+*.class
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
