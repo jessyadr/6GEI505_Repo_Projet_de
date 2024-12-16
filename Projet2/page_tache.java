@@ -102,7 +102,7 @@ public class page_tache extends Application {
                 taskNameLabel.setStyle("-fx-font-weight: bold;");
 
                 Label taskDescriptionLabel = new Label("Description : " + taskDescription);
-                Label taskDatesLabel = new Label("Dates : " + taskStartDate + " - " + taskEndDate);
+                Label taskDatesLabel = new Label("Date de début : " + taskStartDate + " --- date de fin de la tache " + taskEndDate);
                 Label taskStatusLabel = new Label("État : " + taskStatus);
                 Label taskAssignedPersonLabel = new Label("Assignée à : " + (taskAssignedPerson != null ? taskAssignedPerson : "Non assignée"));
 
@@ -149,7 +149,7 @@ public class page_tache extends Application {
         DatePicker endDatePicker = new DatePicker();
 
         ComboBox<String> taskStateComboBox = new ComboBox<>();
-        taskStateComboBox.getItems().addAll("Non commencée", "En cours", "Terminée");
+        taskStateComboBox.getItems().addAll("Non commencée", "En cours", "Terminée", "En retard");
         taskStateComboBox.setPromptText("État de la tâche");
 
         ComboBox<String> assignedPersonComboBox = new ComboBox<>();

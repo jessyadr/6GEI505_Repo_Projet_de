@@ -132,7 +132,7 @@ public class page_connexion extends Application {
         mainContainer.getChildren().addAll(profileImage, headerLabel, gridPane, optionsBox, loginButton, errorLabel, otherLabel, socialMediaBox);
 
         // Affichage
-        Scene scene = new Scene(mainContainer, 1000, 600);
+        Scene scene = new Scene(mainContainer, 1200, 700);
         primaryStage.setScene(scene);
         primaryStage.show();
     }

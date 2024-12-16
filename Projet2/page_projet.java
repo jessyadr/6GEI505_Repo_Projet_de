@@ -1,3 +1,4 @@
+// Importations nécessaires
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -82,10 +83,10 @@ public class page_projet extends Application {
                 projectNameLabel.setStyle("-fx-font-weight: bold;");
 
                 Label projectDescriptionLabel = new Label(projectDescription);
-                Label projectDatesLabel = new Label("Dates: " + projectStartDate + " - " + projectEndDate);
+                Label projectDatesLabel = new Label("Date de début: " + projectStartDate + " --- Date de fin: " + projectEndDate);
                 Label projectAssignedPersonLabel = new Label("Responsable : " + (assignedPerson != null ? assignedPerson : "Non assigné"));
 
-                // Boutons Voir les tâches, Modifier, Supprimer
+                // Boutons "Voir les tâches", "Modifier", "Supprimer", "Gantt"
                 Button viewTasksButton = new Button("Voir les tâches");
                 viewTasksButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
                 viewTasksButton.setOnAction(e -> {
@@ -108,7 +109,19 @@ public class page_projet extends Application {
                     projectsBox.getChildren().remove(projectBox);
                 });
 
-                HBox buttonsBox = new HBox(10, viewTasksButton, editProjectButton, deleteProjectButton);
+                // Nouveau bouton "Gantt"
+                Button ganttButton = new Button("Gantt");
+                ganttButton.setStyle("-fx-background-color: #6A0DAD; -fx-text-fill: white;");
+                ganttButton.setOnAction(e -> {
+                    page_gantt ganttPage = new page_gantt(projectName, projectStartDate, projectEndDate);
+                    try {
+                        ganttPage.start(primaryStage);
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+
+                HBox buttonsBox = new HBox(10, viewTasksButton, editProjectButton, deleteProjectButton, ganttButton);
                 buttonsBox.setAlignment(Pos.CENTER_RIGHT);
 
                 projectBox.getChildren().addAll(projectNameLabel, projectDescriptionLabel, projectDatesLabel, projectAssignedPersonLabel, buttonsBox);
@@ -119,6 +132,7 @@ public class page_projet extends Application {
             System.out.println("Erreur lors de la récupération des projets : " + e.getMessage());
         }
     }
+
 
     private void openEditProjectWindow(Stage owner, String projectName, String projectDescription, String projectStartDate, String projectEndDate, Label projectAssignedPersonLabel) {
         Stage editProjectStage = new Stage();

@@ -142,7 +142,7 @@ public class page_accueil extends Application {
         root.setCenter(centralPane);
 
         // Créer la scène et l'afficher
-        Scene scene = new Scene(root, 1000, 600);
+        Scene scene = new Scene(root, 1200, 700);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
