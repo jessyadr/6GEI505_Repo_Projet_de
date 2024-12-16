@@ -4,7 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SQLiteConnection {
-    private static final String URL = "jdbc:sqlite:C:\\Users\\lauri\\OneDrive\\Desktop\\UQAC\\2024_Fall\\Courses\\Methodes_de_gestion_de_projets_informatiques(6GEI505)\\6GEI505_Repo_Projet_de_Session\\base_de_donnees\\gestion_projets.db"; 
+    private static final String URL = "jdbc:sqlite:C:/Users/lauri/OneDrive/Desktop/UQAC/2024_Fall/Courses/Methodes_de_gestion_de_projets_informatiques(6GEI505)/6GEI505_Repo_Projet_de_Session/base_de_donnees/gestion_projets.db"; 
 
     public static Connection connect() {
         Connection conn = null;
